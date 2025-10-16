@@ -1,0 +1,212 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.2.0"
+    id("io.micronaut.aot") version "4.2.0"
+}
+
+def dotenv = [:]
+def envFile = file('.env')
+if (envFile.exists()) {
+    envFile.eachLine { line ->
+        def s = line.trim()
+        if (!s || s.startsWith('#')) return
+        def m = (s =~ /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/)
+        if (m) {
+            def key = m[0][1]
+            def val = m[0][2].replaceAll(/^['"]|['"]$/, '')
+            dotenv[key] = val
+        }
+    }
+}
+
+tasks.withType(JavaExec).configureEach {
+    // export all variables from .env to the forked JVM process
+    environment dotenv
+    // if .env has MICRONAUT_ENVIRONMENTS, ALSO pass it as a JVM system property
+    if (dotenv.MICRONAUT_ENVIRONMENTS) {
+        jvmArgs "-Dmicronaut.environments=${dotenv.MICRONAUT_ENVIRONMENTS}"
+    }
+}
+
+tasks.named("run", JavaExec).configure {
+    environment([
+            "DB_URL"     : "jdbc:postgresql://localhost:5432/ishm",
+            "DB_USER"    : "ishm",
+            "DB_PASSWORD": "ishm"
+    ])
+}
+
+tasks.test {
+    environment dotenv
+}
+
+version = "1.0.0"
+group = "com.ishm"
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.osgeo.org/repository/release/" }
+}
+
+dependencies {
+    // Micronaut Core
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+
+    implementation("io.micronaut:micronaut-http-server-netty")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("io.micronaut:micronaut-management")
+
+    // Database
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    runtimeOnly("org.postgresql:postgresql:42.7.1")
+//    implementation("org.postgis:postgis-jdbc:2023.1.0")
+
+    // Security (optional - for future authentication)
+    implementation("io.micronaut.security:micronaut-security-jwt")
+
+    // Validation
+    implementation("io.micronaut.validation:micronaut-validation")
+
+    // Views (if using server-side rendering)
+    implementation("io.micronaut.views:micronaut-views-thymeleaf")
+
+    // Logging
+    runtimeOnly("ch.qos.logback:logback-classic")
+
+    // Testing
+    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("io.micronaut.test:micronaut-test-junit5")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.testcontainers:postgresql:1.19.3")
+    testImplementation("org.testcontainers:testcontainers:1.19.3")
+
+    // Compile-time helpers
+    compileOnly("io.micronaut:micronaut-inject-java")
+
+    // Runtime optimizations
+    runtimeOnly("org.yaml:snakeyaml")
+}
+
+application {
+    mainClass.set("com.ishm.soil.Application")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Micronaut configuration
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("com.ishm.*")
+    }
+    aot {
+        // Optimizations for faster startup and lower memory usage
+        optimizeServiceLoading = true
+        convertYamlToJava = true
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+    }
+}
+
+// Shadow JAR configuration for creating executable JAR
+shadowJar {
+    mergeServiceFiles()
+    archiveClassifier.set('')
+    archiveBaseName.set('soil-health-map')
+    manifest {
+        attributes 'Main-Class': 'com.ishm.soil.Application'
+    }
+}
+
+// Test configuration
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
+// Task for running database migrations
+task dbMigrate(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.ishm.soil.DatabaseMigrator'
+    systemProperty 'micronaut.environments', 'migration'
+}
+
+// Task for loading sample data
+task loadSampleData(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.ishm.soil.DataLoader'
+}
+
+// Task for creating distribution
+task createDist(type: Zip) {
+    dependsOn shadowJar
+    from("build/libs") {
+        include "*.jar"
+    }
+    from("src/main/resources/public") {
+        into "static"
+    }
+    from("docker-compose.yml")
+    from("README.md")
+    archiveFileName = "soil-health-map-${version}.zip"
+    destinationDirectory = file("build/distributions")
+}
+
+// Custom task for development with live reload
+task dev {
+    dependsOn 'run'
+    doFirst {
+        println "Starting application in development mode..."
+        println "Access the application at: http://localhost:8080"
+    }
+}
+
+// Performance testing task
+task performanceTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'performance'
+    }
+}
+
+// Integration testing task
+task integrationTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    shouldRunAfter test
+}
+
+// Clean and build task
+task cleanBuild {
+    dependsOn clean, build
+}
+
+// Task to check code quality (placeholder for actual tools like SonarQube)
+task codeQuality {
+    doLast {
+        println "Running code quality checks..."
+        // Add actual code quality tool integration here
+    }
+}
+
+
+
+// Wrapper task for consistent Gradle version
+wrapper {
+    gradleVersion = '8.5'
+    distributionType = Wrapper.DistributionType.ALL
+}

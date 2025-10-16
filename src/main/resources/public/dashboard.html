@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Soil Health Monitor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo-area">
+            <a href="index.html" class="logo-link">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#27ae60"/>
+                    <path d="M20 10C20 10 10 15 10 25C10 28 12 30 20 30C28 30 30 28 30 25C30 15 20 10 20 10Z" fill="white"/>
+                    <circle cx="20" cy="20" r="3" fill="#27ae60"/>
+                </svg>
+                <span class="logo-text">Soil Health Monitor</span>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="map.html">Interactive Map</a></li>
+                <li><a href="recommendations.html">Get Recommendations</a></li>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="login-btn">Login</a>
+    </div>
+</header>
+
+<main class="dashboard-container">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Soil Health Dashboard</h1>
+            <div class="dashboard-filters">
+                <select id="stateFilter" class="filter-select">
+                    <option value="">All States</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="UP">Uttar Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                </select>
+                <select id="yearFilter" class="filter-select">
+                    <option value="2025">2025-26</option>
+                    <option value="2024">2024-25</option>
+                    <option value="2023">2023-24</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </div>
+                <div class="metric-content">
+                    <h3>Districts Covered</h3>
+                    <div class="metric-value">127</div>
+                    <div class="metric-change positive">+12% from last year</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                    </svg>
+                </div>
+                <div class="metric-content">
+                    <h3>Samples Analyzed</h3>
+                    <div class="metric-value">4.15M</div>
+                    <div class="metric-change positive">+23% from last year</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="metric-content">
+                    <h3>Avg. Soil Health</h3>
+                    <div class="metric-value">6.8/10</div>
+                    <div class="metric-change neutral">No change</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="metric-content">
+                    <h3>Farmers Benefited</h3>
+                    <div class="metric-value">2.3M</div>
+                    <div class="metric-change positive">+31% from last year</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <!-- NPK Trends Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>NPK Trends Over Time</h3>
+                    <div class="chart-legend">
+                        <span><i style="background: #3498db"></i> Nitrogen</span>
+                        <span><i style="background: #9b59b6"></i> Phosphorus</span>
+                        <span><i style="background: #e67e22"></i> Potassium</span>
+                    </div>
+                </div>
+                <canvas id="npkTrendsChart"></canvas>
+            </div>
+
+            <!-- Distribution by State -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Sample Distribution by State</h3>
+                </div>
+                <canvas id="stateDistributionChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Detailed Stats Table -->
+        <div class="table-section">
+            <div class="table-header">
+                <h3>District-wise Soil Health Summary</h3>
+                <button class="btn-export">Export CSV</button>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>District</th>
+                        <th>State</th>
+                        <th>Samples</th>
+                        <th>N Status</th>
+                        <th>P Status</th>
+                        <th>K Status</th>
+                        <th>pH Avg</th>
+                        <th>OC %</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="districtTableBody">
+                    <tr>
+                        <td>Delhi</td>
+                        <td>Delhi</td>
+                        <td>15,234</td>
+                        <td><span class="status-badge low">Low</span></td>
+                        <td><span class="status-badge medium">Medium</span></td>
+                        <td><span class="status-badge medium">Medium</span></td>
+                        <td>7.6</td>
+                        <td>0.55</td>
+                        <td><a href="recommendations.html?district=Delhi&state=Delhi" class="action-link">View Details</a></td>
+                    </tr>
+                    <tr>
+                        <td>Gurugram</td>
+                        <td>Haryana</td>
+                        <td>12,876</td>
+                        <td><span class="status-badge medium">Medium</span></td>
+                        <td><span class="status-badge high">High</span></td>
+                        <td><span class="status-badge high">High</span></td>
+                        <td>7.8</td>
+                        <td>0.62</td>
+                        <td><a href="recommendations.html?district=Gurugram&state=Haryana" class="action-link">View Details</a></td>
+                    </tr>
+                    <tr>
+                        <td>Ludhiana</td>
+                        <td>Punjab</td>
+                        <td>18,945</td>
+                        <td><span class="status-badge high">High</span></td>
+                        <td><span class="status-badge medium">Medium</span></td>
+                        <td><span class="status-badge high">High</span></td>
+                        <td>7.4</td>
+                        <td>0.71</td>
+                        <td><a href="recommendations.html?district=Ludhiana&state=Punjab" class="action-link">View Details</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="activities-section">
+            <h3>Recent Activities</h3>
+            <div class="activities-grid">
+                <div class="activity-card">
+                    <div class="activity-icon">📊</div>
+                    <div class="activity-content">
+                        <h4>New Report Generated</h4>
+                        <p>Haryana State Soil Health Report 2025</p>
+                        <span class="activity-time">2 hours ago</span>
+                    </div>
+                </div>
+                <div class="activity-card">
+                    <div class="activity-icon">🗺️</div>
+                    <div class="activity-content">
+                        <h4>Map Updated</h4>
+                        <p>Added 15 new districts in Maharashtra</p>
+                        <span class="activity-time">5 hours ago</span>
+                    </div>
+                </div>
+                <div class="activity-card">
+                    <div class="activity-icon">📈</div>
+                    <div class="activity-content">
+                        <h4>Milestone Reached</h4>
+                        <p>4 Million samples analyzed this year</p>
+                        <span class="activity-time">1 day ago</span>
+                    </div>
+                </div>
+                <div class="activity-card">
+                    <div class="activity-icon">🌾</div>
+                    <div class="activity-content">
+                        <h4>Crop Advisory</h4>
+                        <p>Rabi season recommendations published</p>
+                        <span class="activity-time">2 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html">Interactive Map</a></li>
+                    <li><a href="recommendations.html">Get Recommendations</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">NPK Guidelines</a></li>
+                    <li><a href="#">Crop Database</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@soilhealth.gov.in<br>
+                    Phone: 1800-XXX-XXXX</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Department of Agriculture and Farmers Welfare. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Initialize charts
+    function initCharts() {
+        // NPK Trends Chart
+        const npkCtx = document.getElementById('npkTrendsChart').getContext('2d');
+        new Chart(npkCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Nitrogen',
+                    data: [280, 285, 290, 275, 270, 265, 260, 255, 250, 245, 240, 235],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Phosphorus',
+                    data: [18, 19, 20, 19, 18, 17, 18, 19, 20, 21, 20, 19],
+                    borderColor: '#9b59b6',
+                    backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Potassium',
+                    data: [180, 185, 190, 188, 185, 182, 180, 178, 175, 172, 170, 168],
+                    borderColor: '#e67e22',
+                    backgroundColor: 'rgba(230, 126, 34, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // State Distribution Chart
+        const stateCtx = document.getElementById('stateDistributionChart').getContext('2d');
+        new Chart(stateCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Delhi', 'Haryana', 'Punjab', 'UP', 'Maharashtra'],
+                datasets: [{
+                    label: 'Samples Analyzed',
+                    data: [15234, 45678, 67890, 123456, 89012],
+                    backgroundColor: [
+                        'rgba(39, 174, 96, 0.8)',
+                        'rgba(52, 152, 219, 0.8)',
+                        'rgba(155, 89, 182, 0.8)',
+                        'rgba(230, 126, 34, 0.8)',
+                        'rgba(241, 196, 15, 0.8)'
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Load dashboard data (placeholder)
+    async function loadDashboardData() {
+        try {
+            // This is a placeholder for a real API call
+            // const response = await fetch('/api/dashboard/summary');
+            // if (response.ok) {
+            //     const data = await response.json();
+            //     updateDashboard(data);
+            // }
+            console.log("Fetching dashboard data for selected filters...");
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+        }
+    }
+
+    // Filter handlers
+    document.getElementById('stateFilter').addEventListener('change', loadDashboardData);
+    document.getElementById('yearFilter').addEventListener('change', loadDashboardData);
+
+    // Export CSV
+    document.querySelector('.btn-export').addEventListener('click', function() {
+        alert('CSV export feature will be available soon!');
+    });
+
+    // Initialize on load
+    window.addEventListener('load', () => {
+        initCharts();
+        loadDashboardData();
+    });
+</script>
+
+</body>
+</html>

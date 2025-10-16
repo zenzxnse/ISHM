@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Health Card | Smart Farming Solutions</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo-area">
+            <a href="index.html" class="logo-link">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#27ae60"/>
+                    <path d="M20 10C20 10 10 15 10 25C10 28 12 30 20 30C28 30 30 28 30 25C30 15 20 10 20 10Z" fill="white"/>
+                    <circle cx="20" cy="20" r="3" fill="#27ae60"/>
+                </svg>
+                <span class="logo-text">Soil Health Monitor</span>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="map.html">Interactive Map</a></li>
+                <li><a href="recommendations.html">Get Recommendations</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="login-btn">Login</a>
+    </div>
+</header>
+
+<main>
+    <section class="hero" style="background-image: linear-gradient(rgba(30,132,73,0.7), rgba(30,132,73,0.35)), url('https://idronline.org/wp-content/uploads/2022/11/woman-in-saree-sowing-crop-1.jpg');">
+        <div class="hero-content">
+            <h1>Empowering Farmers With <span>Soil Insights</span> For Sustainable Growth</h1>
+            <p>Get personalized fertilizer recommendations based on your soil's NPK levels. Optimize yields, conserve resources, and build a sustainable future for agriculture.</p>
+            <div class="hero-buttons">
+                <a href="recommendations.html" class="btn btn-primary">Get Fertilizer Recommendations</a>
+                <a href="map.html" class="btn btn-secondary">View Soil Health Map</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-header">
+                <h2>Soil Testing Progress</h2>
+                <select class="stats-period">
+                    <option>2025-26</option>
+                </select>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <img src="https://agriverses.com/wp-content/uploads/2023/03/Feature-image-of-regenerative-agriculture-1024x683.webp" alt="Plant growth" class="stat-image">
+                    <div class="stat-number" data-target="1051995">0</div>
+                    <div class="stat-label">Total Allotment</div>
+                </div>
+                <div class="stat-card">
+                    <img src="https://www.grantthornton.in/globalassets/1.-member-firms/india/new-homepage/media/1440x658px/1440x600px_hero_banner_shutterstock_1032011908.jpg" alt="Sample collection" class="stat-image">
+                    <div class="stat-number" data-target="7320578">0</div>
+                    <div class="stat-label">Sample Collected</div>
+                </div>
+                <div class="stat-card">
+                    <img src="https://idronline.org/wp-content/uploads/2021/08/Agriculture-and-women.webp" alt="Test conducted" class="stat-image">
+                    <div class="stat-number" data-target="4160007">0</div>
+                    <div class="stat-label">Test Conducted & SHC Generated</div>
+                </div>
+            </div>
+            <a href="#" class="more-info">More Info</a>
+        </div>
+    </section>
+
+    <section class="analysis">
+        <div class="container">
+            <div class="analysis-header">
+                <h2>Nutrient Analysis</h2>
+                <p>Insights Into Soil And Nutrient Concentrations Across Regions To Understand The Nutrient Landscape And Its Impact On Soil Health.</p>
+                <div class="samples-analyzed">41.6L Samples Analyzed in 2025-26</div>
+            </div>
+            <div class="nutrient-charts">
+                <div class="chart-item">
+                    <canvas id="nitrogenChart"></canvas>
+                    <h4>Nitrogen (N)</h4>
+                    <div class="chart-legend">
+                        <span class="legend-item"><i class="high"></i> High: 3%</span>
+                        <span class="legend-item"><i class="medium"></i> Medium: 21%</span>
+                        <span class="legend-item"><i class="low"></i> Low: 76%</span>
+                    </div>
+                </div>
+                <div class="chart-item">
+                    <canvas id="phosphorusChart"></canvas>
+                    <h4>Phosphorus (P)</h4>
+                    <div class="chart-legend">
+                        <span class="legend-item"><i class="high"></i> High: 14%</span>
+                        <span class="legend-item"><i class="medium"></i> Medium: 36%</span>
+                        <span class="legend-item"><i class="low"></i> Low: 50%</span>
+                    </div>
+                </div>
+                <div class="chart-item">
+                    <canvas id="potassiumChart"></canvas>
+                    <h4>Potassium (K)</h4>
+                    <div class="chart-legend">
+                        <span class="legend-item"><i class="high"></i> High: 31%</span>
+                        <span class="legend-item"><i class="medium"></i> Medium: 59%</span>
+                        <span class="legend-item"><i class="low"></i> Low: 10%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="training-videos" style="background-image: url('https://foodtank.com/wp-content/uploads/2019/04/DrBronners-Farming-in-India.jpg'); background-size: cover; background-position: center;">
+        <div class="container">
+            <h2>Training Videos</h2>
+            <p>Insights Into Soil And Nutrient Concentrations Across Regions To Understand The Nutrient Landscape And Its Impact On Soil Health.</p>
+            <div class="video-grid">
+                <div class="video-card">
+                    <img src="https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/t/n/TNC22001_NWIndiaAg_220707_09598_JPG.Jpg?crop=0%2C128%2C6016%2C3760&wid=640&hei=400&scl=9.4" alt="SHC Guide">
+                    <h4>SHC Application Guide</h4>
+                </div>
+                <div class="video-card">
+                    <img src="https://idronline.org/wp-content/uploads/2021/08/Agriculture-and-women.webp" alt="Pre-Soil Testing">
+                    <h4>Pre-Soil Testing Process</h4>
+                </div>
+                <div class="video-card">
+                    <img src="https://agriverses.com/wp-content/uploads/2023/03/Feature-image-of-regenerative-agriculture-1024x683.webp" alt="Soil Analysis Guide">
+                    <h4>Soil Health Analysis Guide</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quotes" style="background-color: #f8f9fa; padding: 5rem 0;">
+        <div class="container">
+            <h2>Inspiring Words on Soil and Farming</h2>
+            <div class="quote-grid">
+                <div class="quote-card">"Essentially, all life depends upon the soil… To forget how to dig the earth and to tend the soil is to forget ourselves." - Mahatma Gandhi</div>
+                <div class="quote-card">"The soil is the great connector of lives, the source and destination of all. It is the healer and restorer and resurrector." - Wendell Berry</div>
+                <div class="quote-card">"We can improve soil health much faster than we used to think. It's just a matter of following the principles of nature." - Gabe Brown</div>
+                <div class="quote-card">"The glory of gardening: hands in the dirt, head in the sun, heart with nature. To nurture a garden is to feed not just the body, but the soul." - Alfred Austin</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Optimize Your Farming?</h2>
+                <p>Get personalized recommendations for your soil and crops today.</p>
+                <a href="recommendations.html" class="btn btn-primary">Start Analysis</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html">Interactive Map</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">NPK Guidelines</a></li>
+                    <li><a href="#">Crop Database</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@soilhealth.gov.in<br>
+                    Phone: 1800-XXX-XXXX</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Department of Agriculture and Farmers Welfare. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Animated counter for statistics
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    counter.innerText = Math.floor(current).toLocaleString('en-IN');
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.innerText = target.toLocaleString('en-IN');
+                }
+            };
+            updateCounter();
+        });
+    }
+
+    // Simple donut chart drawing
+    function drawDonutChart(canvasId, percentages, colors) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 70;
+
+        let currentAngle = -Math.PI / 2;
+
+        percentages.forEach((percentage, index) => {
+            const sliceAngle = (percentage / 100) * 2 * Math.PI;
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+            ctx.lineTo(centerX, centerY);
+            ctx.fillStyle = colors[index];
+            ctx.fill();
+
+            currentAngle += sliceAngle;
+        });
+
+        // Draw center circle to create donut effect
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Animate counters when they come into view
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if(entry.target.classList.contains('stats')) {
+                        animateCounters();
+                    }
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stats, .features, .analysis, .cta').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Draw nutrient charts with updated data from screenshot
+        const chartColors = ['#2ecc71', '#f1c40f', '#e74c3c']; // High, Medium, Low
+        drawDonutChart('nitrogenChart', [3, 21, 76], chartColors);
+        drawDonutChart('phosphorusChart', [14, 36, 50], chartColors);
+        drawDonutChart('potassiumChart', [31, 59, 10], chartColors);
+    });
+</script>
+
+</body>
+</html>

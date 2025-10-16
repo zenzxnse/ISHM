@@ -1,0 +1,280 @@
+/* Map Page Specific Styles */
+
+/* This makes the main map container a flex item that can grow /
+.map-container {
+display: flex;
+flex-grow: 1; / This is key for filling vertical space /
+position: relative;
+overflow: hidden; / Prevent scrollbars on the container */
+}
+
+/* Sidebar Styles */
+.map-sidebar {
+width: 350px;
+background: var(--bg-white);
+box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+display: flex;
+flex-direction: column;
+z-index: 500;
+}
+
+.sidebar-content {
+overflow-y: auto;
+flex-grow: 1;
+}
+
+.sidebar-header {
+padding: 2rem 1.5rem;
+background: linear-gradient(135deg, var(--primary-green), var(--primary-dark));
+color: var(--bg-white);
+flex-shrink: 0;
+}
+
+.sidebar-header h3 {
+margin-bottom: 0.5rem;
+color: var(--bg-white);
+}
+
+.sidebar-header p {
+color: rgba(255,255,255,0.9);
+font-size: 0.9rem;
+margin: 0;
+}
+
+/* Filter Sections */
+.filter-section {
+padding: 1.5rem;
+border-bottom: 1px solid var(--border-light);
+}
+
+.filter-section h4 {
+margin-bottom: 1rem;
+color: var(--text-dark);
+font-size: 0.9rem;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+/* Nutrient Selector */
+.nutrient-selector {
+display: flex;
+flex-direction: column;
+gap: 0.75rem;
+}
+
+.nutrient-btn {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+padding: 0.75rem 1rem;
+background: var(--bg-light);
+border: 2px solid transparent;
+border-radius: var(--radius-md);
+cursor: pointer;
+transition: var(--transition-fast);
+font-size: 0.95rem;
+color: var(--text-dark);
+font-weight: 500;
+text-align: left;
+}
+
+.nutrient-btn:hover {
+background: var(--bg-gray);
+}
+
+.nutrient-btn.active {
+background: var(--bg-white);
+border-color: var(--primary-green);
+color: var(--primary-green);
+box-shadow: 0 2px 4px rgba(39, 174, 96, 0.1);
+}
+
+.nutrient-icon {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 700;
+background: var(--bg-gray);
+color: var(--text-dark);
+transition: var(--transition-fast);
+}
+
+.nutrient-btn.active .nutrient-icon {
+background: var(--primary-green);
+color: var(--bg-white);
+}
+
+/* Filter Select */
+.filter-select {
+width: 100%;
+padding: 0.75rem;
+border: 2px solid var(--border-light);
+border-radius: var(--radius-md);
+background: var(--bg-white);
+font-size: 0.95rem;
+color: var(--text-dark);
+cursor: pointer;
+transition: var(--transition-fast);
+}
+
+.filter-select:focus {
+outline: none;
+border-color: var(--primary-green);
+}
+
+/* Legend Section */
+.legend-section {
+padding: 1.5rem;
+border-bottom: 1px solid var(--border-light);
+}
+
+.legend-items {
+display: flex;
+flex-direction: column;
+gap: 0.75rem;
+}
+
+.legend-item {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+font-size: 0.9rem;
+color: var(--text-medium);
+}
+
+.legend-color {
+width: 24px;
+height: 24px;
+border-radius: var(--radius-sm);
+border: 1px solid var(--border-light);
+}
+
+.legend-color.high { background: #2ecc71; }
+.legend-color.medium { background: #f1c40f; }
+.legend-color.low { background: #e74c3c; }
+
+/* Info Section */
+.info-section {
+padding: 1.5rem;
+background: var(--bg-light);
+}
+
+.info-content {
+background: var(--bg-white);
+padding: 1rem;
+border-radius: var(--radius-md);
+}
+
+.info-row {
+display: flex;
+justify-content: space-between;
+padding: 0.5rem 0;
+border-bottom: 1px solid var(--border-light);
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 0.9rem; color: var(--text-light); }
+.info-value { font-size: 0.95rem; font-weight: 600; color: var(--text-dark); }
+
+/* Nutrient Levels Display */
+.nutrient-levels {
+margin-top: 1rem;
+padding-top: 1rem;
+border-top: 1px solid var(--border-light);
+display: flex;
+flex-direction: column;
+gap: 0.75rem;
+}
+
+.nutrient-level { display: flex; align-items: center; gap: 1rem; }
+.nutrient-badge {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 700;
+font-size: 1rem;
+color: var(--bg-white);
+flex-shrink: 0;
+}
+.nutrient-badge.n { background: #3498db; }
+.nutrient-badge.p { background: #9b59b6; }
+.nutrient-badge.k { background: #e67e22; }
+.level-value { font-size: 0.95rem; font-weight: 600; color: var(--text-dark); }
+.level-status { font-size: 0.85rem; color: var(--text-medium); text-transform: capitalize; }
+.level-status.high { color: #2ecc71; }
+.level-status.medium { color: #f39c12; }
+.level-status.low { color: #e74c3c; }
+
+/* Recommendations Button */
+.btn-recommendations {
+width: 100%;
+margin-top: 1rem;
+padding: 0.75rem;
+background: var(--primary-green);
+color: var(--bg-white);
+border: none;
+border-radius: var(--radius-md);
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition-fast);
+}
+.btn-recommendations:hover {
+background: var(--primary-dark);
+transform: translateY(-2px);
+}
+
+/* Map View */
+.map-view {
+flex: 1;
+position: relative;
+}
+#map {
+height: 100%;
+width: 100%;
+}
+
+/* Leaflet Custom Styles */
+.leaflet-popup-content-wrapper {
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-lg);
+}
+.leaflet-popup-content {
+margin: 1rem;
+font-family: 'Inter', sans-serif;
+}
+.leaflet-container {
+font-family: 'Inter', sans-serif;
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+.map-container {
+flex-direction: column;
+}
+.map-sidebar {
+width: 100%;
+height: auto;
+max-height: 40vh;
+order: 2;
+}
+.map-view {
+height: 60vh;
+order: 1;
+}
+}
+
+@media (max-width: 768px) {
+.nutrient-selector {
+flex-direction: row;
+overflow-x: auto;
+padding-bottom: 10px;
+}
+.nutrient-btn {
+flex: 0 0 140px;
+}
+}

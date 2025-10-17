@@ -1,8 +1,10 @@
+# ======================================================
+# DEFAULT CONFIGURATION
+# ======================================================
 micronaut:
   application:
     name: interactive-soil-health-map
     version: 1.0.0
-
   server:
     port: ${MICRONAUT_SERVER_PORT:8080}
     host: ${MICRONAUT_SERVER_HOST:0.0.0.0}
@@ -14,34 +16,33 @@ micronaut:
             - "http://localhost:8080"
             - "http://localhost:3000"
             - "${CORS_ALLOWED_ORIGINS:*}"
-          allowed-methods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          allowed-headers:
-            - Content-Type
-            - Authorization
-            - Accept
-          exposed-headers:
-            - Content-Disposition
+          allowed-methods: [GET, POST, PUT, DELETE, OPTIONS]
+          allowed-headers: [Content-Type, Authorization, Accept]
+          exposed-headers: [Content-Disposition, Authorization]
           max-age: 3600
-
-    thread-selection: AUTO
-    netty:
-      max-chunk-size: 10485760  # 10MB for file uploads
-      worker:
-        threads: ${NETTY_WORKER_THREADS:8}
-
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: ${JWT_SECRET:changeMeInProductionToAVeryLongAndSecureRandomStringWithAtLeast256Bits}
+              jws-algorithm: HS256
+        generator:
+          access-token:
+            expiration: ${JWT_EXPIRATION:86400}
+    intercept-url-map:
+      - pattern: /**
+        access:
+          - isAnonymous()
   router:
     static-resources:
       default:
         enabled: true
-        mapping: /ui/**
-        paths:
-          - classpath:public
-          - file:static
+        mapping: /**
+        paths: ["classpath:public", "file:static"]
       css:
         enabled: true
         mapping: /css/**
@@ -54,35 +55,22 @@ micronaut:
         enabled: true
         mapping: /images/**
         paths: classpath:public/images
-
-  security:
-    enabled: ${SECURITY_ENABLED:false}
-    authentication: bearer
-    token:
-      jwt:
-        signatures:
-          secret:
-            generator:
-              secret: ${JWT_SECRET:pleaseChangeThisSecretForProduction}
-        generator:
-          refresh-token:
-            secret: ${JWT_REFRESH_SECRET:pleaseChangeThisRefreshSecretForProduction}
-          access-token:
-            expiration: 3600  # 1 hour
-
   metrics:
     enabled: true
     export:
       prometheus:
         enabled: true
         step: PT1M
-        descriptions: true
-
   health:
     enabled: true
     sensitive: false
     details-visible: ANONYMOUS
+  http:
+    client:
+      read-timeout: 30s
+      connect-timeout: 10s
 
+# Database Configuration
 datasources:
   default:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/ishm}
@@ -91,10 +79,9 @@ datasources:
     driverClassName: org.postgresql.Driver
     dialect: POSTGRES
     schema-generate: ${DB_SCHEMA_GENERATE:NONE}
-
     hikari:
       minimumIdle: ${DB_MIN_IDLE:5}
-      maximumPoolSize: ${DB_MAX_POOL_SIZE:10}
+      maximumPoolSize: ${DB_MAX_POOL_SIZE:20}
       idleTimeout: ${DB_IDLE_TIMEOUT:600000}
       connectionTimeout: ${DB_CONNECTION_TIMEOUT:30000}
       maxLifetime: ${DB_MAX_LIFETIME:1800000}
@@ -108,29 +95,36 @@ datasources:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
 
+# Jackson Configuration
 jackson:
   serialization:
     writeDatesAsTimestamps: false
     writeDurationsAsTimestamps: false
+    indentOutput: false
   deserialization:
     failOnUnknownProperties: false
   dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
   timeZone: "UTC"
   serialization-inclusion: NON_NULL
 
-# Logging configuration
+# Logging
 logger:
   levels:
     ROOT: ${LOG_LEVEL_ROOT:INFO}
     com.ishm: ${LOG_LEVEL_APP:DEBUG}
     io.micronaut.http.server: ${LOG_LEVEL_HTTP:INFO}
     io.micronaut.data.query: ${LOG_LEVEL_SQL:WARN}
+    io.micronaut.security: ${LOG_LEVEL_SECURITY:DEBUG}
     com.zaxxer.hikari: ${LOG_LEVEL_HIKARI:INFO}
 
-# Application specific configuration
+# Application Specific Configuration
 app:
   soil-health:
-    # NPK threshold values (kg/ha)
+    data-gov-api:
+      base-url: "https://api.data.gov.in"
+      api-key: ${DATA_GOV_API_KEY:}
+      resource-id: ${SOIL_HEALTH_RESOURCE_ID:}
+      enabled: ${DATA_GOV_API_ENABLED:false}
     nitrogen:
       low: 280
       medium: 560
@@ -140,13 +134,9 @@ app:
     potassium:
       low: 110
       medium: 280
-
-    # Default values for calculations
     defaults:
       samples-per-farmer: 2.5
       hectares-per-sample: 2
-
-    # Map configuration
     map:
       default-center:
         lat: 23.5937
@@ -154,40 +144,35 @@ app:
       default-zoom: 5
       max-zoom: 18
       tile-url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-
-    # File upload limits
     upload:
       max-file-size: 10485760  # 10MB
-      allowed-extensions:
-        - csv
-        - xlsx
-        - xls
-        - json
-        - geojson
-
-    # Cache configuration (if using Redis)
+      allowed-extensions: [csv, xlsx, xls, json, geojson]
     cache:
-      enabled: ${CACHE_ENABLED:false}
+      enabled: ${CACHE_ENABLED:true}
       ttl:
-        districts: 3600  # 1 hour
-        statistics: 1800  # 30 minutes
-        recommendations: 300  # 5 minutes
+        districts: 3600
+        statistics: 1800
+        recommendations: 300
 
-# Environment-specific configurations
 ---
+# ======================================================
+# DEVELOPMENT ENVIRONMENT
+# ======================================================
 micronaut:
   environments: development
-
 logger:
   levels:
     com.ishm: DEBUG
     io.micronaut.http.server: DEBUG
     io.micronaut.data.query: DEBUG
+    io.micronaut.security: DEBUG
 
 ---
+# ======================================================
+# PRODUCTION ENVIRONMENT
+# ======================================================
 micronaut:
   environments: production
-
   server:
     cors:
       configurations:
@@ -195,42 +180,56 @@ micronaut:
           allowed-origins:
             - "https://soilhealth.gov.in"
             - "https://www.soilhealth.gov.in"
-
+            - "${PRODUCTION_DOMAIN:}"
   security:
-    enabled: false
-
+    enabled: true
   ssl:
     enabled: ${SSL_ENABLED:false}
     port: ${SSL_PORT:8443}
     key-store:
-      path: ${SSL_KEYSTORE_PATH}
-      password: ${SSL_KEYSTORE_PASSWORD}
+      path: ${SSL_KEYSTORE_PATH:}
+      password: ${SSL_KEYSTORE_PASSWORD:}
       type: ${SSL_KEYSTORE_TYPE:PKCS12}
-
 logger:
   levels:
     ROOT: WARN
     com.ishm: INFO
     io.micronaut.http.server: WARN
     io.micronaut.data.query: WARN
+    io.micronaut.security: INFO
+datasources:
+  default:
+    hikari:
+      maximumPoolSize: 50
+      minimumIdle: 10
 
 ---
+# ======================================================
+# DOCKER ENVIRONMENT
+# ======================================================
 micronaut:
   environments: docker
-
 datasources:
   default:
     url: jdbc:postgresql://db:5432/ishm
 
 ---
+# ======================================================
+# TEST ENVIRONMENT
+# ======================================================
 micronaut:
   environments: test
-
+  security:
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: testSecretKeyForJWTTokenGenerationInTestEnvironmentOnly
 datasources:
   default:
-    url: jdbc:postgresql://localhost:5432/ishm
+    url: jdbc:postgresql://localhost:5432/ishm_test
     schema-generate: CREATE_DROP
-
 logger:
   levels:
     ROOT: WARN

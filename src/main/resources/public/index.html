@@ -3,278 +3,539 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soil Health Card | Smart Farming Solutions</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Soil Health Card | Empowering Farmers With Data-Driven Insights</title>
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<header>
-    <div class="container header-container">
-        <div class="logo-area">
-            <a href="index.html" class="logo-link">
-                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="40" height="40" rx="8" fill="#27ae60"/>
-                    <path d="M20 10C20 10 10 15 10 25C10 28 12 30 20 30C28 30 30 28 30 25C30 15 20 10 20 10Z" fill="white"/>
-                    <circle cx="20" cy="20" r="3" fill="#27ae60"/>
-                </svg>
-                <span class="logo-text">Soil Health Monitor</span>
-            </a>
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/1200px-Emblem_of_India.svg.png" alt="Government of India" class="govt-emblem">
+                <div class="logo-text">
+                    <h1>Soil Health Card</h1>
+                    <p>Ministry of Agriculture & Farmers Welfare</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="map.html" class="nav-link">Soil Map</a>
+                <a href="recommendations.html" class="nav-link">Get SHC</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </nav>
+            <div class="auth-buttons">
+                <button onclick="showLogin()" class="btn-outline">Login</button>
+                <button onclick="showRegister()" class="btn-primary">Register</button>
+            </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="map.html">Interactive Map</a></li>
-                <li><a href="recommendations.html">Get Recommendations</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
-            </ul>
-        </nav>
-        <a href="#" class="login-btn">Login</a>
     </div>
 </header>
 
-<main>
-    <section class="hero" style="background-image: linear-gradient(rgba(30,132,73,0.7), rgba(30,132,73,0.35)), url('https://idronline.org/wp-content/uploads/2022/11/woman-in-saree-sowing-crop-1.jpg');">
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-container">
         <div class="hero-content">
-            <h1>Empowering Farmers With <span>Soil Insights</span> For Sustainable Growth</h1>
-            <p>Get personalized fertilizer recommendations based on your soil's NPK levels. Optimize yields, conserve resources, and build a sustainable future for agriculture.</p>
-            <div class="hero-buttons">
-                <a href="recommendations.html" class="btn btn-primary">Get Fertilizer Recommendations</a>
-                <a href="map.html" class="btn btn-secondary">View Soil Health Map</a>
+            <div class="hero-badge">
+                <span class="badge-icon">🌱</span>
+                <span>Empowering 10+ Million Farmers</span>
+            </div>
+            <h1 class="hero-title">
+                Empowering Farmers With <br>
+                <span class="gradient-text">Soil Insights</span> For <br>
+                Sustainable Growth
+            </h1>
+            <p class="hero-description">
+                Get personalized fertilizer recommendations based on your soil's NPK levels.
+                Optimize yields, conserve resources, and build a sustainable future for agriculture.
+            </p>
+            <div class="hero-actions">
+                <button onclick="location.href='recommendations.html'" class="btn-hero-primary">
+                    Get Soil Health Card
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <button onclick="location.href='map.html'" class="btn-hero-secondary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    View Soil Map
+                </button>
             </div>
         </div>
-    </section>
-
-    <section class="stats">
-        <div class="container">
-            <div class="stats-header">
-                <h2>Soil Testing Progress</h2>
-                <select class="stats-period">
-                    <option>2025-26</option>
-                </select>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-number" data-target="1051995">0</div>
+                <div class="stat-label">Total Allotment</div>
             </div>
-            <div class="stat-grid">
-                <div class="stat-card">
-                    <img src="https://agriverses.com/wp-content/uploads/2023/03/Feature-image-of-regenerative-agriculture-1024x683.webp" alt="Plant growth" class="stat-image">
-                    <div class="stat-number" data-target="1051995">0</div>
-                    <div class="stat-label">Total Allotment</div>
-                </div>
-                <div class="stat-card">
-                    <img src="https://www.grantthornton.in/globalassets/1.-member-firms/india/new-homepage/media/1440x658px/1440x600px_hero_banner_shutterstock_1032011908.jpg" alt="Sample collection" class="stat-image">
-                    <div class="stat-number" data-target="7320578">0</div>
-                    <div class="stat-label">Sample Collected</div>
-                </div>
-                <div class="stat-card">
-                    <img src="https://idronline.org/wp-content/uploads/2021/08/Agriculture-and-women.webp" alt="Test conducted" class="stat-image">
-                    <div class="stat-number" data-target="4160007">0</div>
-                    <div class="stat-label">Test Conducted & SHC Generated</div>
-                </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="7320578">0</div>
+                <div class="stat-label">Samples Collected</div>
             </div>
-            <a href="#" class="more-info">More Info</a>
-        </div>
-    </section>
-
-    <section class="analysis">
-        <div class="container">
-            <div class="analysis-header">
-                <h2>Nutrient Analysis</h2>
-                <p>Insights Into Soil And Nutrient Concentrations Across Regions To Understand The Nutrient Landscape And Its Impact On Soil Health.</p>
-                <div class="samples-analyzed">41.6L Samples Analyzed in 2025-26</div>
-            </div>
-            <div class="nutrient-charts">
-                <div class="chart-item">
-                    <canvas id="nitrogenChart"></canvas>
-                    <h4>Nitrogen (N)</h4>
-                    <div class="chart-legend">
-                        <span class="legend-item"><i class="high"></i> High: 3%</span>
-                        <span class="legend-item"><i class="medium"></i> Medium: 21%</span>
-                        <span class="legend-item"><i class="low"></i> Low: 76%</span>
-                    </div>
-                </div>
-                <div class="chart-item">
-                    <canvas id="phosphorusChart"></canvas>
-                    <h4>Phosphorus (P)</h4>
-                    <div class="chart-legend">
-                        <span class="legend-item"><i class="high"></i> High: 14%</span>
-                        <span class="legend-item"><i class="medium"></i> Medium: 36%</span>
-                        <span class="legend-item"><i class="low"></i> Low: 50%</span>
-                    </div>
-                </div>
-                <div class="chart-item">
-                    <canvas id="potassiumChart"></canvas>
-                    <h4>Potassium (K)</h4>
-                    <div class="chart-legend">
-                        <span class="legend-item"><i class="high"></i> High: 31%</span>
-                        <span class="legend-item"><i class="medium"></i> Medium: 59%</span>
-                        <span class="legend-item"><i class="low"></i> Low: 10%</span>
-                    </div>
-                </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="4160007">0</div>
+                <div class="stat-label">SHC Generated</div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="training-videos" style="background-image: url('https://foodtank.com/wp-content/uploads/2019/04/DrBronners-Farming-in-India.jpg'); background-size: cover; background-position: center;">
-        <div class="container">
-            <h2>Training Videos</h2>
-            <p>Insights Into Soil And Nutrient Concentrations Across Regions To Understand The Nutrient Landscape And Its Impact On Soil Health.</p>
-            <div class="video-grid">
-                <div class="video-card">
-                    <img src="https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/t/n/TNC22001_NWIndiaAg_220707_09598_JPG.Jpg?crop=0%2C128%2C6016%2C3760&wid=640&hei=400&scl=9.4" alt="SHC Guide">
-                    <h4>SHC Application Guide</h4>
-                </div>
-                <div class="video-card">
-                    <img src="https://idronline.org/wp-content/uploads/2021/08/Agriculture-and-women.webp" alt="Pre-Soil Testing">
-                    <h4>Pre-Soil Testing Process</h4>
-                </div>
-                <div class="video-card">
-                    <img src="https://agriverses.com/wp-content/uploads/2023/03/Feature-image-of-regenerative-agriculture-1024x683.webp" alt="Soil Analysis Guide">
-                    <h4>Soil Health Analysis Guide</h4>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="quotes" style="background-color: #f8f9fa; padding: 5rem 0;">
-        <div class="container">
-            <h2>Inspiring Words on Soil and Farming</h2>
-            <div class="quote-grid">
-                <div class="quote-card">"Essentially, all life depends upon the soil… To forget how to dig the earth and to tend the soil is to forget ourselves." - Mahatma Gandhi</div>
-                <div class="quote-card">"The soil is the great connector of lives, the source and destination of all. It is the healer and restorer and resurrector." - Wendell Berry</div>
-                <div class="quote-card">"We can improve soil health much faster than we used to think. It's just a matter of following the principles of nature." - Gabe Brown</div>
-                <div class="quote-card">"The glory of gardening: hands in the dirt, head in the sun, heart with nature. To nurture a garden is to feed not just the body, but the soul." - Alfred Austin</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Optimize Your Farming?</h2>
-                <p>Get personalized recommendations for your soil and crops today.</p>
-                <a href="recommendations.html" class="btn btn-primary">Start Analysis</a>
-            </div>
-        </div>
-    </section>
-</main>
-
-<footer>
+<!-- Features Grid -->
+<section class="features-section">
     <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
+        <div class="section-header">
+            <span class="section-badge">Our Services</span>
+            <h2>Comprehensive Soil Health Solutions</h2>
+            <p>Everything you need to make informed farming decisions</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card" data-aos="fade-up">
+                <div class="feature-icon green">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <h3>Interactive Soil Map</h3>
+                <p>Explore real-time soil health data across India with our interactive mapping system</p>
+                <a href="map.html" class="feature-link">Explore Map →</a>
+            </div>
+
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-icon blue">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/>
+                    </svg>
+                </div>
+                <h3>Soil Testing</h3>
+                <p>Get accurate NPK analysis and micronutrient testing for your farmland</p>
+                <a href="#testing" class="feature-link">Learn More →</a>
+            </div>
+
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-icon orange">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
+                    </svg>
+                </div>
+                <h3>Fertilizer Recommendations</h3>
+                <p>Receive personalized fertilizer advice based on your soil test results</p>
+                <a href="recommendations.html" class="feature-link">Get Recommendations →</a>
+            </div>
+
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-icon purple">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/>
+                    </svg>
+                </div>
+                <h3>Analytics Dashboard</h3>
+                <p>Track trends and monitor soil health improvements over time</p>
+                <a href="dashboard.html" class="feature-link">View Dashboard →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NPK Analysis Section -->
+<section class="npk-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Soil Nutrients</span>
+            <h2>National NPK Analysis</h2>
+            <p class="analysis-subtitle">41.6L Samples Analyzed in 2025-26 | Real-time insights into soil nutrient distribution</p>
+        </div>
+
+        <div class="npk-grid">
+            <div class="npk-card" data-aos="zoom-in">
+                <div class="npk-header">
+                    <div class="npk-icon nitrogen">N</div>
+                    <h3>Nitrogen</h3>
+                </div>
+                <canvas id="nitrogenChart"></canvas>
+                <div class="npk-legend">
+                    <div class="legend-item"><span class="dot high"></span>High: 3%</div>
+                    <div class="legend-item"><span class="dot medium"></span>Medium: 21%</div>
+                    <div class="legend-item"><span class="dot low"></span>Low: 76%</div>
+                </div>
+            </div>
+
+            <div class="npk-card" data-aos="zoom-in" data-aos-delay="100">
+                <div class="npk-header">
+                    <div class="npk-icon phosphorus">P</div>
+                    <h3>Phosphorus</h3>
+                </div>
+                <canvas id="phosphorusChart"></canvas>
+                <div class="npk-legend">
+                    <div class="legend-item"><span class="dot high"></span>High: 14%</div>
+                    <div class="legend-item"><span class="dot medium"></span>Medium: 36%</div>
+                    <div class="legend-item"><span class="dot low"></span>Low: 50%</div>
+                </div>
+            </div>
+
+            <div class="npk-card" data-aos="zoom-in" data-aos-delay="200">
+                <div class="npk-header">
+                    <div class="npk-icon potassium">K</div>
+                    <h3>Potassium</h3>
+                </div>
+                <canvas id="potassiumChart"></canvas>
+                <div class="npk-legend">
+                    <div class="legend-item"><span class="dot high"></span>High: 31%</div>
+                    <div class="legend-item"><span class="dot medium"></span>Medium: 59%</div>
+                    <div class="legend-item"><span class="dot low"></span>Low: 10%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Image Gallery Section -->
+<section class="gallery-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">Success Stories</span>
+            <h2>Transforming Indian Agriculture</h2>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item large" data-aos="fade-right">
+                <img src="https://idronline.org/wp-content/uploads/2022/11/woman-in-saree-sowing-crop-1.jpg" alt="Farmer working">
+                <div class="gallery-overlay">
+                    <h3>Empowering Women Farmers</h3>
+                    <p>Supporting sustainable farming practices across rural India</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up">
+                <img src="https://agriverses.com/wp-content/uploads/2023/03/Feature-image-of-regenerative-agriculture-1024x683.webp" alt="Agriculture">
+                <div class="gallery-overlay">
+                    <h3>Regenerative Agriculture</h3>
+                    <p>Building healthier soils for future generations</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://www.grantthornton.in/globalassets/1.-member-firms/india/new-homepage/media/1440x658px/1440x600px_hero_banner_shutterstock_1032011908.jpg" alt="Farming">
+                <div class="gallery-overlay">
+                    <h3>Modern Farming</h3>
+                    <p>Technology meets tradition</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-aos="fade-left">
+                <img src="https://idronline.org/wp-content/uploads/2021/08/Agriculture-and-women.webp" alt="Women in agriculture">
+                <div class="gallery-overlay">
+                    <h3>Community Farming</h3>
+                    <p>Growing together, succeeding together</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quotes Section -->
+<section class="quotes-section">
+    <div class="container">
+        <div class="quotes-grid">
+            <div class="quote-card" data-aos="fade-up">
+                <div class="quote-icon">"</div>
+                <p class="quote-text">Essentially, all life depends upon the soil… To forget how to dig the earth and to tend the soil is to forget ourselves.</p>
+                <div class="quote-author">— Mahatma Gandhi</div>
+            </div>
+            <div class="quote-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="quote-icon">"</div>
+                <p class="quote-text">The soil is the great connector of lives, the source and destination of all. It is the healer and restorer and resurrector.</p>
+                <div class="quote-author">— Wendell Berry</div>
+            </div>
+            <div class="quote-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="quote-icon">"</div>
+                <p class="quote-text">We can improve soil health much faster than we used to think. It's just a matter of following the principles of nature.</p>
+                <div class="quote-author">— Gabe Brown</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2>Ready to Transform Your Farming?</h2>
+            <p>Join millions of farmers using data-driven insights to optimize yields and build sustainable farms</p>
+            <div class="cta-buttons">
+                <button onclick="showRegister()" class="btn-cta-primary">Get Started Free</button>
+                <button onclick="location.href='map.html'" class="btn-cta-secondary">Explore Soil Map</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
                 <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="map.html">Interactive Map</a></li>
-                    <li><a href="dashboard.html">Dashboard</a></li>
-                </ul>
+                <a href="index.html">Home</a>
+                <a href="map.html">Soil Map</a>
+                <a href="recommendations.html">Get SHC</a>
+                <a href="dashboard.html">Dashboard</a>
             </div>
-            <div class="footer-section">
+            <div class="footer-col">
                 <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">NPK Guidelines</a></li>
-                    <li><a href="#">Crop Database</a></li>
-                    <li><a href="#">FAQs</a></li>
-                </ul>
+                <a href="#">NPK Guidelines</a>
+                <a href="#">Crop Database</a>
+                <a href="#">Training Videos</a>
+                <a href="#">FAQs</a>
             </div>
-            <div class="footer-section">
+            <div class="footer-col">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Feedback</a>
+            </div>
+            <div class="footer-col">
                 <h4>Contact</h4>
-                <p>Email: support@soilhealth.gov.in<br>
-                    Phone: 1800-XXX-XXXX</p>
+                <p>Email: support@soilhealth.gov.in</p>
+                <p>Phone: 1800-XXX-XXXX</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">📘</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="YouTube">📺</a>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Department of Agriculture and Farmers Welfare. All Rights Reserved.</p>
+            <p>&copy; 2025 Ministry of Agriculture & Farmers Welfare, Government of India. All Rights Reserved.</p>
         </div>
     </div>
 </footer>
 
+<!-- Auth Modal -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeAuthModal()">&times;</span>
+        <div id="loginForm" class="auth-form">
+            <h2>Welcome Back</h2>
+            <p>Login to access your Soil Health Dashboard</p>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn-auth">Login</button>
+            </form>
+            <p class="auth-switch">Don't have an account? <a onclick="switchToRegister()">Register here</a></p>
+        </div>
+
+        <div id="registerForm" class="auth-form" style="display:none;">
+            <h2>Create Account</h2>
+            <p>Register to get your personalized Soil Health Card</p>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regFullName" required>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Postal Code (6 digits)</label>
+                    <input type="text" id="regPostalCode" pattern="[0-9]{6}" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number (Optional)</label>
+                    <input type="tel" id="regPhone" pattern="[0-9]{10}">
+                </div>
+                <button type="submit" class="btn-auth">Register</button>
+            </form>
+            <p class="auth-switch">Already have an account? <a onclick="switchToLogin()">Login here</a></p>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Animated counter for statistics
-    function animateCounters() {
-        const counters = document.querySelectorAll('.stat-number');
-
-        counters.forEach(counter => {
-            const target = parseInt(counter.getAttribute('data-target'));
-            const duration = 2000; // 2 seconds
-            const increment = target / (duration / 16);
-            let current = 0;
-
-            const updateCounter = () => {
-                current += increment;
-                if (current < target) {
-                    counter.innerText = Math.floor(current).toLocaleString('en-IN');
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    counter.innerText = target.toLocaleString('en-IN');
-                }
-            };
-            updateCounter();
-        });
+    // Counter Animation
+    function animateCounter(element, target) {
+        let current = 0;
+        const increment = target / 100;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                element.textContent = target.toLocaleString('en-IN');
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current).toLocaleString('en-IN');
+            }
+        }, 20);
     }
 
-    // Simple donut chart drawing
+    // Initialize counters when visible
+    const observerOptions = { threshold: 0.5 };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.dataset.target);
+                animateCounter(entry.target, target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.stat-number').forEach(el => observer.observe(el));
+
+    // Draw NPK Charts
     function drawDonutChart(canvasId, percentages, colors) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
 
-        const ctx = canvas.getContext('2d');
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const radius = 70;
-
-        let currentAngle = -Math.PI / 2;
-
-        percentages.forEach((percentage, index) => {
-            const sliceAngle = (percentage / 100) * 2 * Math.PI;
-
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
-            ctx.lineTo(centerX, centerY);
-            ctx.fillStyle = colors[index];
-            ctx.fill();
-
-            currentAngle += sliceAngle;
+        new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: ['High', 'Medium', 'Low'],
+                datasets: [{
+                    data: percentages,
+                    backgroundColor: colors,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '70%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 }
+                    }
+                }
+            }
         });
-
-        // Draw center circle to create donut effect
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI);
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
     }
 
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        // Animate counters when they come into view
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
+    // Initialize charts
+    const chartColors = ['#2ecc71', '#f1c40f', '#e74c3c'];
+    drawDonutChart('nitrogenChart', [3, 21, 76], chartColors);
+    drawDonutChart('phosphorusChart', [14, 36, 50], chartColors);
+    drawDonutChart('potassiumChart', [31, 59, 10], chartColors);
 
-        const observer = new IntersectionObserver((entries, observer) => {
+    // Auth Modal Functions
+    function showLogin() {
+        document.getElementById('authModal').style.display = 'flex';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+    }
+
+    function showRegister() {
+        document.getElementById('authModal').style.display = 'flex';
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+
+    function closeAuthModal() {
+        document.getElementById('authModal').style.display = 'none';
+    }
+
+    function switchToRegister() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+
+    function switchToLogin() {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+    }
+
+    // Handle Login
+    async function handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('farmer', JSON.stringify(data.farmer));
+                alert('Login successful!');
+                closeAuthModal();
+                window.location.href = 'dashboard.html';
+            } else {
+                alert(data.error || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Login failed. Please try again.');
+        }
+    }
+
+    // Handle Register
+    async function handleRegister(e) {
+        e.preventDefault();
+        const fullName = document.getElementById('regFullName').value;
+        const username = document.getElementById('regUsername').value;
+        const password = document.getElementById('regPassword').value;
+        const postalCode = document.getElementById('regPostalCode').value;
+        const phone = document.getElementById('regPhone').value;
+
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, postalCode, fullName, phone })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert('Registration successful! Please login.');
+                switchToLogin();
+            } else {
+                alert(data.error || 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            alert('Registration failed. Please try again.');
+        }
+    }
+
+    // Close modal on outside click
+    window.onclick = function(event) {
+        const modal = document.getElementById('authModal');
+        if (event.target === modal) {
+            closeAuthModal();
+        }
+    }
+
+    // Simple AOS-like animation
+    document.addEventListener('DOMContentLoaded', () => {
+        const animElements = document.querySelectorAll('[data-aos]');
+        const animObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    if(entry.target.classList.contains('stats')) {
-                        animateCounters();
-                    }
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
+                    entry.target.classList.add('aos-animate');
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.stats, .features, .analysis, .cta').forEach(section => {
-            observer.observe(section);
-        });
-
-        // Draw nutrient charts with updated data from screenshot
-        const chartColors = ['#2ecc71', '#f1c40f', '#e74c3c']; // High, Medium, Low
-        drawDonutChart('nitrogenChart', [3, 21, 76], chartColors);
-        drawDonutChart('phosphorusChart', [14, 36, 50], chartColors);
-        drawDonutChart('potassiumChart', [31, 59, 10], chartColors);
+        animElements.forEach(el => animObserver.observe(el));
     });
 </script>
 

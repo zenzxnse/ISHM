@@ -3,398 +3,623 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Soil Health Monitor</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>My Dashboard | Soil Health Monitor</title>
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dashboard-page {
+            min-height: 100vh;
+            background: var(--bg-light);
+            padding-top: 80px;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 32px 0;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 32px;
+        }
+
+        .welcome-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-text h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text p {
+            color: var(--text-secondary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            padding: 10px 24px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .metric-icon.green { background: linear-gradient(135deg, var(--success), var(--primary)); }
+        .metric-icon.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .metric-icon.orange { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .metric-icon.purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .soil-health-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nutrient-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nutrient-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .bar-container {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .bar-fill.nitrogen { background: linear-gradient(90deg, #3498db, #2980b9); }
+        .bar-fill.phosphorus { background: linear-gradient(90deg, #9b59b6, #8e44ad); }
+        .bar-fill.potassium { background: linear-gradient(90deg, #e67e22, #d35400); }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: white;
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .recommendations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .recommendation-item {
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary);
+        }
+
+        .recommendation-item h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .recommendation-item p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        @media (max-width: 992px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-    <div class="container header-container">
-        <div class="logo-area">
-            <a href="index.html" class="logo-link">
-                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="40" height="40" rx="8" fill="#27ae60"/>
-                    <path d="M20 10C20 10 10 15 10 25C10 28 12 30 20 30C28 30 30 28 30 25C30 15 20 10 20 10Z" fill="white"/>
-                    <circle cx="20" cy="20" r="3" fill="#27ae60"/>
-                </svg>
-                <span class="logo-text">Soil Health Monitor</span>
-            </a>
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/1200px-Emblem_of_India.svg.png" alt="Government of India" class="govt-emblem">
+                <div class="logo-text">
+                    <h1>Soil Health Card</h1>
+                    <p>Ministry of Agriculture & Farmers Welfare</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="map.html" class="nav-link">Soil Map</a>
+                <a href="recommendations.html" class="nav-link">Get SHC</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="map.html">Interactive Map</a></li>
-                <li><a href="recommendations.html">Get Recommendations</a></li>
-                <li><a href="dashboard.html" class="active">Dashboard</a></li>
-            </ul>
-        </nav>
-        <a href="#" class="login-btn">Login</a>
     </div>
 </header>
 
-<main class="dashboard-container">
-    <div class="container">
-        <div class="dashboard-header">
-            <h1>Soil Health Dashboard</h1>
-            <div class="dashboard-filters">
-                <select id="stateFilter" class="filter-select">
-                    <option value="">All States</option>
-                    <option value="Delhi">Delhi</option>
-                    <option value="Haryana">Haryana</option>
-                    <option value="Punjab">Punjab</option>
-                    <option value="UP">Uttar Pradesh</option>
-                    <option value="Maharashtra">Maharashtra</option>
-                </select>
-                <select id="yearFilter" class="filter-select">
-                    <option value="2025">2025-26</option>
-                    <option value="2024">2024-25</option>
-                    <option value="2023">2023-24</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Key Metrics -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>
-                    </svg>
+<div class="dashboard-page">
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span id="userName">Farmer</span>! 👋</h1>
+                    <p id="userLocation">📍 Loading your location...</p>
                 </div>
-                <div class="metric-content">
-                    <h3>Districts Covered</h3>
-                    <div class="metric-value">127</div>
-                    <div class="metric-change positive">+12% from last year</div>
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                    </svg>
-                </div>
-                <div class="metric-content">
-                    <h3>Samples Analyzed</h3>
-                    <div class="metric-value">4.15M</div>
-                    <div class="metric-change positive">+23% from last year</div>
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
-                    </svg>
-                </div>
-                <div class="metric-content">
-                    <h3>Avg. Soil Health</h3>
-                    <div class="metric-value">6.8/10</div>
-                    <div class="metric-change neutral">No change</div>
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                </div>
-                <div class="metric-content">
-                    <h3>Farmers Benefited</h3>
-                    <div class="metric-value">2.3M</div>
-                    <div class="metric-change positive">+31% from last year</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts Section -->
-        <div class="charts-section">
-            <!-- NPK Trends Chart -->
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h3>NPK Trends Over Time</h3>
-                    <div class="chart-legend">
-                        <span><i style="background: #3498db"></i> Nitrogen</span>
-                        <span><i style="background: #9b59b6"></i> Phosphorus</span>
-                        <span><i style="background: #e67e22"></i> Potassium</span>
-                    </div>
-                </div>
-                <canvas id="npkTrendsChart"></canvas>
-            </div>
-
-            <!-- Distribution by State -->
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h3>Sample Distribution by State</h3>
-                </div>
-                <canvas id="stateDistributionChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Detailed Stats Table -->
-        <div class="table-section">
-            <div class="table-header">
-                <h3>District-wise Soil Health Summary</h3>
-                <button class="btn-export">Export CSV</button>
-            </div>
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                    <tr>
-                        <th>District</th>
-                        <th>State</th>
-                        <th>Samples</th>
-                        <th>N Status</th>
-                        <th>P Status</th>
-                        <th>K Status</th>
-                        <th>pH Avg</th>
-                        <th>OC %</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody id="districtTableBody">
-                    <tr>
-                        <td>Delhi</td>
-                        <td>Delhi</td>
-                        <td>15,234</td>
-                        <td><span class="status-badge low">Low</span></td>
-                        <td><span class="status-badge medium">Medium</span></td>
-                        <td><span class="status-badge medium">Medium</span></td>
-                        <td>7.6</td>
-                        <td>0.55</td>
-                        <td><a href="recommendations.html?district=Delhi&state=Delhi" class="action-link">View Details</a></td>
-                    </tr>
-                    <tr>
-                        <td>Gurugram</td>
-                        <td>Haryana</td>
-                        <td>12,876</td>
-                        <td><span class="status-badge medium">Medium</span></td>
-                        <td><span class="status-badge high">High</span></td>
-                        <td><span class="status-badge high">High</span></td>
-                        <td>7.8</td>
-                        <td>0.62</td>
-                        <td><a href="recommendations.html?district=Gurugram&state=Haryana" class="action-link">View Details</a></td>
-                    </tr>
-                    <tr>
-                        <td>Ludhiana</td>
-                        <td>Punjab</td>
-                        <td>18,945</td>
-                        <td><span class="status-badge high">High</span></td>
-                        <td><span class="status-badge medium">Medium</span></td>
-                        <td><span class="status-badge high">High</span></td>
-                        <td>7.4</td>
-                        <td>0.71</td>
-                        <td><a href="recommendations.html?district=Ludhiana&state=Punjab" class="action-link">View Details</a></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Recent Activities -->
-        <div class="activities-section">
-            <h3>Recent Activities</h3>
-            <div class="activities-grid">
-                <div class="activity-card">
-                    <div class="activity-icon">📊</div>
-                    <div class="activity-content">
-                        <h4>New Report Generated</h4>
-                        <p>Haryana State Soil Health Report 2025</p>
-                        <span class="activity-time">2 hours ago</span>
-                    </div>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-icon">🗺️</div>
-                    <div class="activity-content">
-                        <h4>Map Updated</h4>
-                        <p>Added 15 new districts in Maharashtra</p>
-                        <span class="activity-time">5 hours ago</span>
-                    </div>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-icon">📈</div>
-                    <div class="activity-content">
-                        <h4>Milestone Reached</h4>
-                        <p>4 Million samples analyzed this year</p>
-                        <span class="activity-time">1 day ago</span>
-                    </div>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-icon">🌾</div>
-                    <div class="activity-content">
-                        <h4>Crop Advisory</h4>
-                        <p>Rabi season recommendations published</p>
-                        <span class="activity-time">2 days ago</span>
-                    </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">F</div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
         </div>
     </div>
-</main>
 
-<footer>
     <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div>
+                        <div class="metric-value" id="nitrogenValue">-</div>
+                        <div class="metric-label">Nitrogen (kg/ha)</div>
+                    </div>
+                    <div class="metric-icon blue">🔵</div>
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary);" id="nitrogenStatus">Loading...</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div>
+                        <div class="metric-value" id="phosphorusValue">-</div>
+                        <div class="metric-label">Phosphorus (kg/ha)</div>
+                    </div>
+                    <div class="metric-icon purple">🟣</div>
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary);" id="phosphorusStatus">Loading...</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div>
+                        <div class="metric-value" id="potassiumValue">-</div>
+                        <div class="metric-label">Potassium (kg/ha)</div>
+                    </div>
+                    <div class="metric-icon orange">🟠</div>
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary);" id="potassiumStatus">Loading...</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div>
+                        <div class="metric-value" id="phValue">-</div>
+                        <div class="metric-label">Soil pH Level</div>
+                    </div>
+                    <div class="metric-icon green">🟢</div>
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary);">Optimal: 6.0 - 7.5</div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <div class="card">
+                <h2>Your Soil Health Overview</h2>
+                <div class="soil-health-bars">
+                    <div class="nutrient-bar">
+                        <div class="nutrient-bar-header">
+                            <span>Nitrogen</span>
+                            <span id="nPercent">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-fill nitrogen" id="nBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="nutrient-bar">
+                        <div class="nutrient-bar-header">
+                            <span>Phosphorus</span>
+                            <span id="pPercent">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-fill phosphorus" id="pBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="nutrient-bar">
+                        <div class="nutrient-bar-header">
+                            <span>Potassium</span>
+                            <span id="kPercent">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-fill potassium" id="kBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 32px;">
+                    <h3 style="font-size: 18px; margin-bottom: 16px;">Personalized Recommendations</h3>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <div class="recommendation-item">
+                            <h4>Loading your recommendations...</h4>
+                            <p>Please wait while we analyze your soil data.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Quick Actions</h2>
+                <div class="quick-actions">
+                    <a href="map.html" class="action-btn">
+                        <div class="action-icon" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white;">🗺️</div>
+                        <div>View Soil Map</div>
+                    </a>
+
+                    <a href="recommendations.html" class="action-btn">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #e67e22, #d35400); color: white;">📋</div>
+                        <div>Get New SHC</div>
+                    </a>
+
+                    <a href="#" onclick="downloadReport(); return false;" class="action-btn">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white;">📥</div>
+                        <div>Download Report</div>
+                    </a>
+
+                    <a href="#" onclick="alert('Contact support feature coming soon!'); return false;" class="action-btn">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white;">💬</div>
+                        <div>Contact Expert</div>
+                    </a>
+                </div>
+
+                <div style="margin-top: 32px; padding: 16px; background: var(--bg-light); border-radius: var(--radius-md);">
+                    <h3 style="font-size: 16px; margin-bottom: 8px;">💡 Did You Know?</h3>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin: 0;">
+                        Regular soil testing can increase crop yields by up to 20% through optimized fertilizer use.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
                 <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="map.html">Interactive Map</a></li>
-                    <li><a href="recommendations.html">Get Recommendations</a></li>
-                </ul>
+                <a href="index.html">Home</a>
+                <a href="map.html">Soil Map</a>
+                <a href="recommendations.html">Get SHC</a>
             </div>
-            <div class="footer-section">
+            <div class="footer-col">
                 <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">NPK Guidelines</a></li>
-                    <li><a href="#">Crop Database</a></li>
-                    <li><a href="#">FAQs</a></li>
-                </ul>
+                <a href="#">NPK Guidelines</a>
+                <a href="#">Training Videos</a>
+                <a href="#">FAQs</a>
             </div>
-            <div class="footer-section">
+            <div class="footer-col">
                 <h4>Contact</h4>
-                <p>Email: support@soilhealth.gov.in<br>
-                    Phone: 1800-XXX-XXXX</p>
+                <p>Email: support@soilhealth.gov.in</p>
+                <p>Phone: 1800-XXX-XXXX</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Department of Agriculture and Farmers Welfare. All Rights Reserved.</p>
+            <p>&copy; 2025 Ministry of Agriculture & Farmers Welfare. All Rights Reserved.</p>
         </div>
     </div>
 </footer>
 
 <script>
-    // Initialize charts
-    function initCharts() {
-        // NPK Trends Chart
-        const npkCtx = document.getElementById('npkTrendsChart').getContext('2d');
-        new Chart(npkCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Nitrogen',
-                    data: [280, 285, 290, 275, 270, 265, 260, 255, 250, 245, 240, 235],
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }, {
-                    label: 'Phosphorus',
-                    data: [18, 19, 20, 19, 18, 17, 18, 19, 20, 21, 20, 19],
-                    borderColor: '#9b59b6',
-                    backgroundColor: 'rgba(155, 89, 182, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }, {
-                    label: 'Potassium',
-                    data: [180, 185, 190, 188, 185, 182, 180, 178, 175, 172, 170, 168],
-                    borderColor: '#e67e22',
-                    backgroundColor: 'rgba(230, 126, 34, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        grid: {
-                            color: 'rgba(0,0,0,0.05)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
+    // Check authentication
+    function checkAuth() {
+        const token = localStorage.getItem('token');
+        const farmerData = localStorage.getItem('farmer');
 
-        // State Distribution Chart
-        const stateCtx = document.getElementById('stateDistributionChart').getContext('2d');
-        new Chart(stateCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Delhi', 'Haryana', 'Punjab', 'UP', 'Maharashtra'],
-                datasets: [{
-                    label: 'Samples Analyzed',
-                    data: [15234, 45678, 67890, 123456, 89012],
-                    backgroundColor: [
-                        'rgba(39, 174, 96, 0.8)',
-                        'rgba(52, 152, 219, 0.8)',
-                        'rgba(155, 89, 182, 0.8)',
-                        'rgba(230, 126, 34, 0.8)',
-                        'rgba(241, 196, 15, 0.8)'
-                    ],
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0,0,0,0.05)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-    }
+        console.log('Checking auth...', { hasToken: !!token, hasFarmer: !!farmerData });
 
-    // Load dashboard data (placeholder)
-    async function loadDashboardData() {
+        if (!token || !farmerData) {
+            console.log('No auth credentials found, redirecting to home');
+            alert('Please login first to access the dashboard');
+            window.location.href = 'index.html';
+            return null;
+        }
+
         try {
-            // This is a placeholder for a real API call
-            // const response = await fetch('/api/dashboard/summary');
-            // if (response.ok) {
-            //     const data = await response.json();
-            //     updateDashboard(data);
-            // }
-            console.log("Fetching dashboard data for selected filters...");
-        } catch (error) {
-            console.error('Error loading dashboard data:', error);
+            return JSON.parse(farmerData);
+        } catch (e) {
+            console.error('Failed to parse farmer data', e);
+            localStorage.removeItem('token');
+            localStorage.removeItem('farmer');
+            window.location.href = 'index.html';
+            return null;
         }
     }
 
-    // Filter handlers
-    document.getElementById('stateFilter').addEventListener('change', loadDashboardData);
-    document.getElementById('yearFilter').addEventListener('change', loadDashboardData);
+    // Logout
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('farmer');
+        window.location.href = 'index.html';
+    }
 
-    // Export CSV
-    document.querySelector('.btn-export').addEventListener('click', function() {
-        alert('CSV export feature will be available soon!');
-    });
+    // Load dashboard data
+    async function loadDashboard() {
+        const farmer = checkAuth();
+        if (!farmer) return;
 
-    // Initialize on load
-    window.addEventListener('load', () => {
-        initCharts();
-        loadDashboardData();
+        // Update user info
+        document.getElementById('userName').textContent = farmer.fullName || farmer.username;
+        document.getElementById('userLocation').textContent = `📍 ${farmer.district}, ${farmer.state} (${farmer.postalCode})`;
+        document.getElementById('userAvatar').textContent = (farmer.fullName || farmer.username).charAt(0).toUpperCase();
+
+        // Fetch soil data for user's district
+        try {
+            const response = await fetch(`/api/map/districts?state=${encodeURIComponent(farmer.state)}`);
+            const data = await response.json();
+
+            if (data.features && data.features.length > 0) {
+                // Find user's district
+                const userDistrict = data.features.find(f =>
+                    f.properties.district_name.toLowerCase() === farmer.district.toLowerCase()
+                );
+
+                if (userDistrict) {
+                    updateDashboard(userDistrict.properties);
+                } else {
+                    // Use first district as fallback
+                    updateDashboard(data.features[0].properties);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            // Use demo data
+            updateDashboard({
+                nitrogen_avg: 280,
+                nitrogen_status: 'Medium',
+                phosphorus_avg: 18,
+                phosphorus_status: 'Medium',
+                potassium_avg: 200,
+                potassium_status: 'Medium',
+                ph_avg: 7.2
+            });
+        }
+    }
+
+    // Update dashboard with soil data
+    function updateDashboard(soilData) {
+        // Update metric cards
+        document.getElementById('nitrogenValue').textContent = Math.round(soilData.nitrogen_avg || 0);
+        document.getElementById('nitrogenStatus').textContent = `Status: ${soilData.nitrogen_status || 'Unknown'}`;
+
+        document.getElementById('phosphorusValue').textContent = Math.round(soilData.phosphorus_avg || 0);
+        document.getElementById('phosphorusStatus').textContent = `Status: ${soilData.phosphorus_status || 'Unknown'}`;
+
+        document.getElementById('potassiumValue').textContent = Math.round(soilData.potassium_avg || 0);
+        document.getElementById('potassiumStatus').textContent = `Status: ${soilData.potassium_status || 'Unknown'}`;
+
+        document.getElementById('phValue').textContent = (soilData.ph_avg || 0).toFixed(1);
+
+        // Update progress bars
+        const nPercent = Math.min(100, (soilData.nitrogen_avg / 560) * 100);
+        const pPercent = Math.min(100, (soilData.phosphorus_avg / 25) * 100);
+        const kPercent = Math.min(100, (soilData.potassium_avg / 280) * 100);
+
+        document.getElementById('nBar').style.width = nPercent + '%';
+        document.getElementById('nPercent').textContent = Math.round(nPercent) + '%';
+
+        document.getElementById('pBar').style.width = pPercent + '%';
+        document.getElementById('pPercent').textContent = Math.round(pPercent) + '%';
+
+        document.getElementById('kBar').style.width = kPercent + '%';
+        document.getElementById('kPercent').textContent = Math.round(kPercent) + '%';
+
+        // Generate recommendations
+        generateRecommendations(soilData);
+    }
+
+    // Generate recommendations based on soil data
+    function generateRecommendations(soilData) {
+        const recommendations = [];
+
+        if (soilData.nitrogen_status === 'Low') {
+            recommendations.push({
+                title: '🔵 Increase Nitrogen',
+                description: 'Apply urea fertilizer at 120-150 kg/ha to improve nitrogen levels.'
+            });
+        }
+
+        if (soilData.phosphorus_status === 'Low') {
+            recommendations.push({
+                title: '🟣 Boost Phosphorus',
+                description: 'Use DAP or SSP fertilizer to enhance phosphorus availability.'
+            });
+        }
+
+        if (soilData.potassium_status === 'Low') {
+            recommendations.push({
+                title: '🟠 Add Potassium',
+                description: 'Apply MOP fertilizer to increase potassium content in soil.'
+            });
+        }
+
+        if (soilData.ph_avg < 6.0) {
+            recommendations.push({
+                title: '🟢 Adjust pH',
+                description: 'Apply lime to increase soil pH and reduce acidity.'
+            });
+        } else if (soilData.ph_avg > 7.5) {
+            recommendations.push({
+                title: '🟢 Balance pH',
+                description: 'Consider using sulfur or gypsum to lower soil pH.'
+            });
+        }
+
+        if (recommendations.length === 0) {
+            recommendations.push({
+                title: '✅ Excellent Soil Health',
+                description: 'Your soil parameters are within optimal ranges. Maintain current practices!'
+            });
+        }
+
+        // Update UI
+        const listEl = document.getElementById('recommendationsList');
+        listEl.innerHTML = recommendations.map(r => `
+            <div class="recommendation-item">
+                <h4>${r.title}</h4>
+                <p>${r.description}</p>
+            </div>
+        `).join('');
+    }
+
+    // Download report
+    function downloadReport() {
+        alert('Report download feature will be available soon! Your personalized soil health report will include detailed NPK analysis and fertilizer recommendations.');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        const farmer = checkAuth();
+        if (farmer) {
+            loadDashboard();
+        }
     });
 </script>
 

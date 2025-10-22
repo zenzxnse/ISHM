@@ -228,7 +228,7 @@ micronaut:
               secret: testSecretKeyForJWTTokenGenerationInTestEnvironmentOnly
 datasources:
   default:
-    url: jdbc:postgresql://localhost:5432/ishm
+    url: jdbc:postgresql://localhost:5432/ishm_test
     schema-generate: CREATE_DROP
 logger:
   levels:

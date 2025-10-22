@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Soil Health Map | Real-time NPK Data</title>
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            position: sticky;
+        }
+
+        .map-page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .map-hero-mini {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 24px 0;
+            text-align: center;
+        }
+
+        .map-hero-mini h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .map-container-wrapper {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        .map-sidebar {
+            width: 360px;
+            background: white;
+            box-shadow: var(--shadow-md);
+            overflow-y: auto;
+            z-index: 500;
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 24px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-section {
+            padding: 24px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .sidebar-section h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .nutrient-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nutrient-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nutrient-btn:hover {
+            background: var(--bg-white);
+            border-color: var(--primary);
+        }
+
+        .nutrient-btn.active {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nutrient-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .nutrient-icon.n { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .nutrient-icon.p { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .nutrient-icon.k { background: linear-gradient(135deg, #e67e22, #d35400); }
+
+        .filter-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .legend-color {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            border: 2px solid #e0e0e0;
+        }
+
+        .legend-color.high { background: #2ecc71; }
+        .legend-color.medium { background: #f1c40f; }
+        .legend-color.low { background: #e74c3c; }
+
+        .info-panel {
+            background: var(--bg-light);
+            padding: 24px;
+        }
+
+        .info-panel h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .nutrient-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .nutrient-box {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .nutrient-box-icon {
+            font-weight: 800;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .nutrient-box-value {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .nutrient-box-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .status-high { background: rgba(46,204,113,0.2); color: #27ae60; }
+        .status-medium { background: rgba(241,196,21,0.2); color: #f39c12; }
+        .status-low { background: rgba(231,76,60,0.2); color: #e74c3c; }
+
+        .btn-get-shc {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: var(--transition);
+        }
+
+        .btn-get-shc:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        #map {
+            flex: 1;
+        }
+
+        .leaflet-popup-content {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .popup-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .popup-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        @media (max-width: 992px) {
+            .map-container-wrapper {
+                flex-direction: column;
+            }
+
+            .map-sidebar {
+                width: 100%;
+                max-height: 40vh;
+            }
+
+            #map {
+                height: 60vh !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/1200px-Emblem_of_India.svg.png" alt="Government of India" class="govt-emblem">
+                <div class="logo-text">
+                    <h1>Soil Health Card</h1>
+                    <p>Ministry of Agriculture & Farmers Welfare</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="map.html" class="nav-link active">Soil Map</a>
+                <a href="recommendations.html" class="nav-link">Get SHC</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<div class="map-page">
+    <div class="map-hero-mini">
+        <h1>🗺️ Interactive Soil Health Map</h1>
+        <p>Explore real-time NPK data across India</p>
+    </div>
+
+    <div class="map-container-wrapper">
+        <aside class="map-sidebar">
+            <div class="sidebar-header">
+                <h2>Map Controls</h2>
+                <p style="opacity: 0.9; font-size: 14px;">Select nutrient to visualize</p>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Select Nutrient</h3>
+                <div class="nutrient-buttons">
+                    <button class="nutrient-btn active" data-nutrient="nitrogen">
+                        <div class="nutrient-icon n">N</div>
+                        <div>
+                            <div style="font-weight: 700;">Nitrogen</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">kg/ha</div>
+                        </div>
+                    </button>
+                    <button class="nutrient-btn" data-nutrient="phosphorus">
+                        <div class="nutrient-icon p">P</div>
+                        <div>
+                            <div style="font-weight: 700;">Phosphorus</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">kg/ha</div>
+                        </div>
+                    </button>
+                    <button class="nutrient-btn" data-nutrient="potassium">
+                        <div class="nutrient-icon k">K</div>
+                        <div>
+                            <div style="font-weight: 700;">Potassium</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">kg/ha</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Filter by State</h3>
+                <select id="stateFilter" class="filter-select">
+                    <option value="">All States</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                </select>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 id="legendTitle">Nitrogen Levels</h3>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color high"></div>
+                        <div>
+                            <div style="font-weight: 600;">High</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);" id="highRange">&gt; 560 kg/ha</div>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color medium"></div>
+                        <div>
+                            <div style="font-weight: 600;">Medium</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);" id="mediumRange">280 - 560 kg/ha</div>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color low"></div>
+                        <div>
+                            <div style="font-weight: 600;">Low</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);" id="lowRange">&lt; 280 kg/ha</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-panel" id="districtInfo" style="display: none;">
+                <h3>District Information</h3>
+                <div class="info-row">
+                    <span class="info-label">District:</span>
+                    <span class="info-value" id="infoDistrict">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">State:</span>
+                    <span class="info-value" id="infoState">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Samples:</span>
+                    <span class="info-value" id="infoSamples">-</span>
+                </div>
+
+                <div class="nutrient-grid">
+                    <div class="nutrient-box">
+                        <div class="nutrient-box-icon" style="color: #3498db;">N</div>
+                        <div class="nutrient-box-value" id="nValue">-</div>
+                        <div class="nutrient-box-status status-medium" id="nStatus">-</div>
+                    </div>
+                    <div class="nutrient-box">
+                        <div class="nutrient-box-icon" style="color: #9b59b6;">P</div>
+                        <div class="nutrient-box-value" id="pValue">-</div>
+                        <div class="nutrient-box-status status-medium" id="pStatus">-</div>
+                    </div>
+                    <div class="nutrient-box">
+                        <div class="nutrient-box-icon" style="color: #e67e22;">K</div>
+                        <div class="nutrient-box-value" id="kValue">-</div>
+                        <div class="nutrient-box-status status-medium" id="kStatus">-</div>
+                    </div>
+                </div>
+
+                <button class="btn-get-shc" onclick="getSHC()">Get Soil Health Card</button>
+            </div>
+        </aside>
+
+        <div id="map"></div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map, districtLayer;
+    let currentNutrient = 'nitrogen';
+    let currentData = null;
+    let selectedDistrict = null;
+
+    // Initialize map
+    function initMap() {
+        map = L.map('map', {
+            center: [23.5937, 78.9629],
+            zoom: 5,
+            zoomControl: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        loadMapData();
+    }
+
+    // Color based on nutrient status
+    function getColor(status) {
+        const colors = {
+            high: '#2ecc71',
+            medium: '#f1c40f',
+            low: '#e74c3c'
+        };
+        return colors[(status || '').toLowerCase()] || '#95a5a6';
+    }
+
+    // Style function
+    function style(feature) {
+        const nutrientStatus = feature.properties[currentNutrient + '_status'];
+        return {
+            fillColor: getColor(nutrientStatus),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            fillOpacity: 0.7
+        };
+    }
+
+    // Highlight feature
+    function highlightFeature(e) {
+        const layer = e.target;
+        layer.setStyle({
+            weight: 3,
+            color: '#333',
+            fillOpacity: 0.9
+        });
+        layer.bringToFront();
+        updateInfo(layer.feature.properties);
+    }
+
+    // Reset highlight
+    function resetHighlight(e) {
+        districtLayer.resetStyle(e.target);
+    }
+
+    // Click feature
+    function clickFeature(e) {
+        selectedDistrict = e.target.feature.properties;
+        map.fitBounds(e.target.getBounds());
+        updateInfo(selectedDistrict);
+    }
+
+    // Update info panel
+    function updateInfo(props) {
+        document.getElementById('districtInfo').style.display = 'block';
+        document.getElementById('infoDistrict').textContent = props.district_name || '-';
+        document.getElementById('infoState').textContent = props.state_name || '-';
+        document.getElementById('infoSamples').textContent = (props.samples_analyzed || 0).toLocaleString('en-IN');
+
+        // Update NPK values
+        updateNutrientBox('n', props.nitrogen_avg, props.nitrogen_status);
+        updateNutrientBox('p', props.phosphorus_avg, props.phosphorus_status);
+        updateNutrientBox('k', props.potassium_avg, props.potassium_status);
+    }
+
+    function updateNutrientBox(nutrient, value, status) {
+        const valueEl = document.getElementById(nutrient + 'Value');
+        const statusEl = document.getElementById(nutrient + 'Status');
+
+        valueEl.textContent = value ? value + ' kg/ha' : '-';
+        statusEl.textContent = status || '-';
+        statusEl.className = 'nutrient-box-status status-' + (status || '').toLowerCase();
+    }
+
+    // Load map data
+    async function loadMapData() {
+        try {
+            const state = document.getElementById('stateFilter').value;
+            const url = state ? `/api/map/districts?state=${encodeURIComponent(state)}` : '/api/map/districts';
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to load data');
+
+            const data = await response.json();
+            currentData = data;
+
+            if (districtLayer) {
+                map.removeLayer(districtLayer);
+            }
+
+            if (data.features && data.features.length > 0) {
+                districtLayer = L.geoJSON(data, {
+                    style: style,
+                    onEachFeature: function(feature, layer) {
+                        layer.on({
+                            mouseover: highlightFeature,
+                            mouseout: resetHighlight,
+                            click: clickFeature
+                        });
+
+                        const props = feature.properties;
+                        const popupContent = `
+                            <div class="popup-title">${props.district_name}, ${props.state_name}</div>
+                            <div class="popup-row">
+                                <strong>Nitrogen:</strong>
+                                <span>${props.nitrogen_avg} kg/ha (${props.nitrogen_status})</span>
+                            </div>
+                            <div class="popup-row">
+                                <strong>Phosphorus:</strong>
+                                <span>${props.phosphorus_avg} kg/ha (${props.phosphorus_status})</span>
+                            </div>
+                            <div class="popup-row">
+                                <strong>Potassium:</strong>
+                                <span>${props.potassium_avg} kg/ha (${props.potassium_status})</span>
+                            </div>
+                            <div class="popup-row">
+                                <strong>pH:</strong>
+                                <span>${props.ph_avg}</span>
+                            </div>
+                            <div class="popup-row">
+                                <strong>Samples:</strong>
+                                <span>${props.samples_analyzed.toLocaleString('en-IN')}</span>
+                            </div>
+                        `;
+                        layer.bindPopup(popupContent);
+                    }
+                }).addTo(map);
+            } else {
+                // Demo data if API fails
+                loadDemoData();
+            }
+        } catch (error) {
+            console.error('Error loading map data:', error);
+            loadDemoData();
+        }
+    }
+
+    // Demo data fallback
+    function loadDemoData() {
+        const demoData = {
+            type: "FeatureCollection",
+            features: [
+                {
+                    type: "Feature",
+                    properties: {
+                        district_name: "Delhi",
+                        state_name: "Delhi",
+                        nitrogen_avg: 110,
+                        nitrogen_status: "Low",
+                        phosphorus_avg: 18,
+                        phosphorus_status: "Medium",
+                        potassium_avg: 300,
+                        potassium_status: "High",
+                        ph_avg: 7.6,
+                        samples_analyzed: 15234
+                    },
+                    geometry: {
+                        type: "Polygon",
+                        coordinates: [[[77.05,28.40],[77.35,28.40],[77.35,28.88],[77.05,28.88],[77.05,28.40]]]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        district_name: "Pune",
+                        state_name: "Maharashtra",
+                        nitrogen_avg: 640,
+                        nitrogen_status: "High",
+                        phosphorus_avg: 28,
+                        phosphorus_status: "High",
+                        potassium_avg: 90,
+                        potassium_status: "Low",
+                        ph_avg: 7.2,
+                        samples_analyzed: 34890
+                    },
+                    geometry: {
+                        type: "Polygon",
+                        coordinates: [[[73.55,18.25],[74.05,18.25],[74.05,18.75],[73.55,18.75],[73.55,18.25]]]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        district_name: "Lucknow",
+                        state_name: "Uttar Pradesh",
+                        nitrogen_avg: 295,
+                        nitrogen_status: "Medium",
+                        phosphorus_avg: 15,
+                        phosphorus_status: "Medium",
+                        potassium_avg: 180,
+                        potassium_status: "Medium",
+                        ph_avg: 7.5,
+                        samples_analyzed: 24567
+                    },
+                    geometry: {
+                        type: "Polygon",
+                        coordinates: [[[80.75,26.55],[81.15,26.55],[81.15,27.00],[80.75,27.00],[80.75,26.55]]]
+                    }
+                }
+            ]
+        };
+        currentData = demoData;
+
+        districtLayer = L.geoJSON(demoData, {
+            style: style,
+            onEachFeature: function(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    click: clickFeature
+                });
+                const props = feature.properties;
+                layer.bindPopup(`<strong>${props.district_name}</strong><br>N: ${props.nitrogen_avg} (${props.nitrogen_status})`);
+            }
+        }).addTo(map);
+    }
+
+    // Update legend
+    function updateLegend() {
+        const ranges = {
+            nitrogen: ['> 560', '280 - 560', '< 280'],
+            phosphorus: ['> 25', '10 - 25', '< 10'],
+            potassium: ['> 280', '110 - 280', '< 110']
+        };
+
+        const titles = {
+            nitrogen: 'Nitrogen Levels',
+            phosphorus: 'Phosphorus Levels',
+            potassium: 'Potassium Levels'
+        };
+
+        document.getElementById('legendTitle').textContent = titles[currentNutrient];
+        document.getElementById('highRange').textContent = ranges[currentNutrient][0] + ' kg/ha';
+        document.getElementById('mediumRange').textContent = ranges[currentNutrient][1] + ' kg/ha';
+        document.getElementById('lowRange').textContent = ranges[currentNutrient][2] + ' kg/ha';
+    }
+
+    // Nutrient button handlers
+    document.querySelectorAll('.nutrient-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.nutrient-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentNutrient = btn.dataset.nutrient;
+            updateLegend();
+            if (districtLayer) {
+                districtLayer.setStyle(style);
+            }
+        });
+    });
+
+    // State filter
+    document.getElementById('stateFilter').addEventListener('change', loadMapData);
+
+    // Get SHC function
+    function getSHC() {
+        if (selectedDistrict) {
+            window.location.href = `recommendations.html?district=${encodeURIComponent(selectedDistrict.district_name)}&state=${encodeURIComponent(selectedDistrict.state_name)}`;
+        } else {
+            alert('Please select a district on the map first');
+        }
+    }
+
+    // Initialize
+    initMap();
+    updateLegend();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Fertilizer Recommendations | Soil Health Monitor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/recommendations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo-area">
+            <a href="index.html" class="logo-link">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#27ae60"/>
+                    <path d="M20 10C20 10 10 15 10 25C10 28 12 30 20 30C28 30 30 28 30 25C30 15 20 10 20 10Z" fill="white"/>
+                    <circle cx="20" cy="20" r="3" fill="#27ae60"/>
+                </svg>
+                <span class="logo-text">Soil Health Monitor</span>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="map.html">Interactive Map</a></li>
+                <li><a href="recommendations.html" class="active">Get Recommendations</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="login-btn">Login</a>
+    </div>
+</header>
+
+<main class="recommendations-container">
+    <div class="container">
+        <div class="page-header">
+            <h1>Get Fertilizer Recommendations</h1>
+            <p>Enter your soil test values and crop details to get personalized fertilizer recommendations</p>
+        </div>
+
+        <div class="form-container">
+            <form id="recommendationForm">
+                <!-- Location Section -->
+                <div class="form-section">
+                    <h3>Location Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="state">State *</label>
+                            <select id="state" name="state" required>
+                                <option value="">Select State</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="district">District *</label>
+                            <input type="text" id="district" name="district" placeholder="Enter district name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soil Test Values Section -->
+                <div class="form-section">
+                    <h3>Soil Test Results</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nitrogen">
+                                Nitrogen (N)
+                                <span class="unit">kg/ha</span>
+                            </label>
+                            <input type="number" id="nitrogen" name="nitrogen" placeholder="e.g., 250" step="0.1">
+                            <span class="input-hint">Leave blank if unknown</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="phosphorus">
+                                Phosphorus (P)
+                                <span class="unit">kg/ha</span>
+                            </label>
+                            <input type="number" id="phosphorus" name="phosphorus" placeholder="e.g., 20" step="0.1">
+                            <span class="input-hint">Leave blank if unknown</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="potassium">
+                                Potassium (K)
+                                <span class="unit">kg/ha</span>
+                            </label>
+                            <input type="number" id="potassium" name="potassium" placeholder="e.g., 180" step="0.1">
+                            <span class="input-hint">Leave blank if unknown</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="ph">
+                                pH Level
+                            </label>
+                            <input type="number" id="ph" name="ph" placeholder="e.g., 7.2" step="0.1" min="0" max="14">
+                        </div>
+                        <div class="form-group">
+                            <label for="organic_carbon">
+                                Organic Carbon
+                                <span class="unit">%</span>
+                            </label>
+                            <input type="number" id="organic_carbon" name="organic_carbon" placeholder="e.g., 0.5" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="ec">
+                                Electrical Conductivity
+                                <span class="unit">dS/m</span>
+                            </label>
+                            <input type="number" id="ec" name="ec" placeholder="e.g., 0.8" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crop Selection Section -->
+                <div class="form-section">
+                    <h3>Crop Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="crop">Select Crop *</label>
+                            <select id="crop" name="crop" required>
+                                <option value="">Select Crop</option>
+                                <optgroup label="Cereals">
+                                    <option value="wheat">Wheat</option>
+                                    <option value="rice">Rice (Paddy)</option>
+                                    <option value="maize">Maize</option>
+                                </optgroup>
+                                <optgroup label="Cash Crops">
+                                    <option value="cotton">Cotton</option>
+                                    <option value="sugarcane">Sugarcane</option>
+                                </optgroup>
+                                <optgroup label="Oilseeds">
+                                    <option value="mustard">Mustard</option>
+                                    <option value="groundnut">Groundnut</option>
+                                </optgroup>
+                                <optgroup label="Vegetables">
+                                    <option value="tomato">Tomato</option>
+                                    <option value="potato">Potato</option>
+                                    <option value="onion">Onion</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="season">Cropping Season *</label>
+                            <select id="season" name="season" required>
+                                <option value="">Select Season</option>
+                                <option value="kharif">Kharif (June-October)</option>
+                                <option value="rabi">Rabi (October-March)</option>
+                                <option value="zaid">Zaid (April-June)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                    <button type="submit" class="btn btn-primary">Get Recommendations</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section (Initially Hidden) -->
+        <div id="resultsSection" class="results-container" style="display: none;">
+            <h2>Fertilizer Recommendations</h2>
+
+            <div class="results-grid">
+                <!-- Nutrient Status Cards -->
+                <div class="status-card">
+                    <h4>Soil Nutrient Status</h4>
+                    <div class="nutrient-status-grid">
+                        <div class="nutrient-status-item">
+                            <span class="nutrient-label">Nitrogen</span>
+                            <span class="status-badge" id="n-status">-</span>
+                        </div>
+                        <div class="nutrient-status-item">
+                            <span class="nutrient-label">Phosphorus</span>
+                            <span class="status-badge" id="p-status">-</span>
+                        </div>
+                        <div class="nutrient-status-item">
+                            <span class="nutrient-label">Potassium</span>
+                            <span class="status-badge" id="k-status">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Fertilizers -->
+                <div class="recommendation-card">
+                    <h4>Recommended Fertilizers</h4>
+                    <div class="fertilizer-list">
+                        <div class="fertilizer-item">
+                            <div class="fertilizer-name">Urea</div>
+                            <div class="fertilizer-dose" id="urea-dose">-</div>
+                        </div>
+                        <div class="fertilizer-item">
+                            <div class="fertilizer-name">DAP</div>
+                            <div class="fertilizer-dose" id="dap-dose">-</div>
+                        </div>
+                        <div class="fertilizer-item">
+                            <div class="fertilizer-name">MOP</div>
+                            <div class="fertilizer-dose" id="mop-dose">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application Schedule -->
+                <div class="schedule-card">
+                    <h4>Application Schedule</h4>
+                    <div class="schedule-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">1</div>
+                            <div class="timeline-content">
+                                <h5>Basal Dose</h5>
+                                <p id="basal-dose">Apply at the time of sowing/planting</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">2</div>
+                            <div class="timeline-content">
+                                <h5>First Top Dressing</h5>
+                                <p id="first-topdress">30-35 days after sowing</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">3</div>
+                            <div class="timeline-content">
+                                <h5>Second Top Dressing</h5>
+                                <p id="second-topdress">60-65 days after sowing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Recommendations -->
+                <div class="tips-card">
+                    <h4>Additional Tips</h4>
+                    <ul id="additional-tips">
+                        <li>Apply fertilizers when soil has adequate moisture.</li>
+                        <li>Avoid fertilizer application during heavy rain.</li>
+                        <li>Consider getting a soil test every 2-3 years for accuracy.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="results-actions">
+                <button class="btn btn-secondary" onclick="window.print()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    Print
+                </button>
+                <button class="btn btn-secondary" onclick="alert('PDF download feature will be available soon!')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Save PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html">Interactive Map</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">NPK Guidelines</a></li>
+                    <li><a href="#">Crop Database</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@soilhealth.gov.in<br>
+                    Phone: 1800-XXX-XXXX</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Department of Agriculture and Farmers Welfare. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const districtFromUrl = urlParams.get('district');
+        const stateFromUrl = urlParams.get('state');
+
+        if (districtFromUrl) document.getElementById('district').value = districtFromUrl.replace(' (Demo)','');
+        if (stateFromUrl) document.getElementById('state').value = stateFromUrl;
+
+        document.getElementById('recommendationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            displayDemoRecommendations(data);
+        });
+    });
+
+    function displayRecommendations(data) {
+        document.getElementById('resultsSection').style.display = 'block';
+
+        updateNutrientStatus('n-status', data.nitrogenStatus);
+        updateNutrientStatus('p-status', data.phosphorusStatus);
+        updateNutrientStatus('k-status', data.potassiumStatus);
+
+        document.getElementById('urea-dose').textContent = `${data.ureaDose} kg/ha`;
+        document.getElementById('dap-dose').textContent = `${data.dapDose} kg/ha`;
+        document.getElementById('mop-dose').textContent = `${data.mopDose} kg/ha`;
+
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function displayDemoRecommendations(formData) {
+        const n = parseFloat(formData.nitrogen) || 250;
+        const p = parseFloat(formData.phosphorus) || 20;
+        const k = parseFloat(formData.potassium) || 180;
+
+        const recommendations = {
+            nitrogenStatus: calculateStatus(n, 'N'),
+            phosphorusStatus: calculateStatus(p, 'P'),
+            potassiumStatus: calculateStatus(k, 'K'),
+            ureaDose: calculateDose(n, formData.crop, [200, 150, 100]),
+            dapDose: calculateDose(p, formData.crop, [150, 100, 50]),
+            mopDose: calculateDose(k, formData.crop, [120, 80, 40])
+        };
+
+        displayRecommendations(recommendations);
+    }
+
+    function calculateStatus(value, nutrient) {
+        if (isNaN(value)) return 'Unknown';
+        const thresholds = {
+            N: [280, 560],
+            P: [10, 25],
+            K: [110, 280]
+        };
+        if (value < thresholds[nutrient][0]) return 'Low';
+        if (value <= thresholds[nutrient][1]) return 'Medium';
+        return 'High';
+    }
+
+    function calculateDose(value, crop, doses) {
+        const status = calculateStatus(value, Object.keys(doses)[0]); // A bit of a hack, assumes nutrient type
+        const baseDose = status === 'Low' ? doses[0] : status === 'Medium' ? doses[1] : doses[2];
+        const cropFactors = { wheat: 1.0, rice: 1.2, maize: 1.1, cotton: 1.3, sugarcane: 1.5, mustard: 0.8, tomato: 1.2, potato: 1.3 };
+        return Math.round(baseDose * (cropFactors[crop] || 1.0));
+    }
+
+    function updateNutrientStatus(elementId, status) {
+        const element = document.getElementById(elementId);
+        element.textContent = status;
+        element.className = 'status-badge ' + status.toLowerCase();
+    }
+
+    function resetForm() {
+        document.getElementById('recommendationForm').reset();
+        document.getElementById('resultsSection').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

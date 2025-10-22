@@ -1,15 +1,3 @@
--- Complete database schema for Interactive Soil Health Monitoring System
--- Drop existing tables if reinstantiating
-DROP TABLE IF EXISTS fertilizer_recommendations CASCADE;
-DROP TABLE IF EXISTS crop_recommendations CASCADE;
-DROP TABLE IF EXISTS soil_health_data CASCADE;
-DROP TABLE IF EXISTS farmers CASCADE;
-DROP TABLE IF EXISTS districts CASCADE;
-DROP TABLE IF EXISTS states CASCADE;
-DROP FUNCTION IF EXISTS classify_nutrient_level CASCADE;
-DROP FUNCTION IF EXISTS update_nutrient_status CASCADE;
-DROP VIEW IF EXISTS district_soil_summary CASCADE;
-
 -- Enable PostGIS extension
 CREATE EXTENSION IF NOT EXISTS postgis;
 
